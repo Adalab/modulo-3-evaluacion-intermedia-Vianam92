@@ -1,11 +1,11 @@
-import "../styles/App.css";
+import "../styles/App.scss";
 import { useState, useEffect } from "react";
 import getAdalabers from "../services/api";
 
 function App() {
   const [adalabers, setAdalabers] = useState([]);
   //aqui guardo el value
-  //const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [newAdalaber, setNewAdalaber] = useState({
     name: "",
     counselor: "",
@@ -27,38 +27,51 @@ function App() {
 
   const handleClick = (eve) => {
     eve.preventDefault();
-    setAdalabers([...adalabers,newAdalaber]);
+    setAdalabers([...adalabers, newAdalaber]);
     setNewAdalaber({
-    name: "",
-    counselor: "",
-    speciality: "",
-    })
-  };
-
-  /*const handleValue = (eve) => {
-    const currentValue = eve.currentTarget.value;
-    setSearch(currentValue);
-  };*/
-
-  const renderListAdalabers = () => {
-    return adalabers.map((student, index) => {
-      return (
-        <tr key={index}>
-          <td>{student.name}</td>
-          <td>{student.counselor}</td>
-          <td>{student.speciality}</td>
-        </tr>
-      );
+      name: "",
+      counselor: "",
+      speciality: "",
     });
   };
+
+  const handleSearchAdalaber = (eve) => {
+    const currentValue = eve.currentTarget.value;
+    setSearch(currentValue);
+  };
+
+  const renderListAdalabers = adalabers.filter((student) =>
+    student.name.toLowerCase().includes(search.toLowerCase())
+  )
+  .map((student,index) => {
+    return (
+      <tr key={index}>
+        <td>{student.name}</td>
+        <td>{student.counselor}</td>
+        <td>{student.speciality}</td>
+      </tr>
+    );
+  }
+  );
 
   return (
     <>
       <header>
-        <h1>Adalabers</h1>
+        <h1 className="title">Adalabers</h1>
       </header>
       <main>
-        <table>
+        <form className="form">
+          <label htmlFor="search" className="form__label">Nombre:</label>
+          <input
+          className="form__input"
+          autoComplete="off"
+            type="text"
+            name="search"
+            placeholder="filtrar alumna"
+            onChange={handleSearchAdalaber}
+          />
+        </form>
+        <table  className="table" cellPadding="2">
           <thead>
             <tr>
               <th>Nombre</th>
@@ -66,13 +79,14 @@ function App() {
               <th>Especialidad</th>
             </tr>
           </thead>
-          <tbody>{renderListAdalabers()}</tbody>
+          <tbody>{renderListAdalabers}</tbody>
         </table>
 
-        <form>
-          <h2>Añadir una Adalaber</h2>
-          <label htmlFor="name">Nombre</label>
+        <form className="add-form">
+          <h2 className="add-form__h2">Añadir una Adalaber</h2>
+          <label htmlFor="name" className="add-form__label">Nombre</label>
           <input
+          className="add-form__input"
             type="text"
             name="name"
             id="name"
@@ -80,8 +94,9 @@ function App() {
             value={adalabers.name}
             onChange={handleAddNewAdalaber}
           />
-          <label htmlFor="counselor">Tutora</label>
+          <label htmlFor="counselor" className="add-form__label">Tutora</label>
           <input
+          className="add-form__input"
             type="text"
             name="counselor"
             id="counselor"
@@ -89,8 +104,9 @@ function App() {
             value={adalabers.counselor}
             onChange={handleAddNewAdalaber}
           />
-          <label htmlFor="speciality">Especialidad</label>
+          <label htmlFor="speciality" className="add-form__label">Especialidad</label>
           <input
+          className="add-form__input"
             type="text"
             name="speciality"
             id="speciality"
@@ -99,6 +115,7 @@ function App() {
             onChange={handleAddNewAdalaber}
           />
           <input
+          className="add-form__btn"
             type="submit"
             value="Añadir una nueva Adalaber"
             onClick={handleClick}
